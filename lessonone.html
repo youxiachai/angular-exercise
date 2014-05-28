@@ -1,0 +1,67 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+
+     <script src="main.js"></script>
+    <!--<script>-->
+
+        <!--console.log('hello')-->
+        <!--angular.module('myApp', ['ngRoute']);-->
+    <!--</script>-->
+
+    <script>
+
+
+    </script>
+</head>
+<body>
+
+<h2>JavaScript Projects</h2>
+<div ng-view></div>
+
+<div ng-controller="mycontroller">
+    <input type="text" ng-model="person.name" placeholder="enter your name" />
+
+    <h1> Hello {{person.name}}</h1>
+
+    <h5>{{ clock }}</h5>
+</div>
+
+<div ng-controller="democontroller">
+       <h4>Here is add or substrace {{counter}}</h4>
+
+    <button ng-click="add(1)">ADD</button>
+    <button ng-click="substract(1)">substract</button>
+
+    <button ng-click="send()">send</button>
+
+    <p>{{ data }}</p>
+
+    <ul>
+        <li ng-repeat="person in roommates">{{ person.name }}</li>
+    </ul>
+
+</div>
+
+
+<button ng-init="shouldShow = true" ng-click="shouldShow = !shouldShow">Flip the shouldShow variable</button>
+<div ng-show="shouldShow">
+    <h3>Showing {{ shouldShow }}</h3>
+</div>
+<div ng-hide="shouldShow">
+    <h3>Hiding {{ shouldShow }}</h3>
+</div>
+
+<h1>directive test</h1>
+
+
+
+<table>
+    <tr><th>row number</th></tr>
+    <tr ng-repeat="i in [0, 1, 2, 3, 4, 5, 6, 7]"><td>{{i}}</td></tr>
+</table>
+
+</body>
+</html>   

@@ -1,0 +1,177 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <!--console.log('hello')-->
+    <!--angular.module('myApp', ['ngRoute']);-->
+    <!--</script>-->
+
+    <script>
+        var app = angular.module('myApp', ['ngRoute']);
+
+        app.factory('notesFactory', function() {
+            return {
+                put: function(note) {
+                    console.log(note);
+                    localStorage.setItem('note' + note.id, JSON.stringify(note));
+                    return this.getAll();
+                },
+                get: function(index) {
+                    console.log(index);
+                    return JSON.parse(localStorage.getItem('note' + index));
+                },
+                getAll: function() {
+                    var notes = [];
+                    for (var i = 0; i < localStorage.length; i++) {
+                        if (localStorage.key(i).indexOf('note') !== -1) {
+                            var note = localStorage.getItem(localStorage.key(i));
+                            notes.push(JSON.parse(note));
+                        }
+                    }
+                    return notes;
+                }
+            };
+        })
+
+        app.directive('notepad',function(notesFactory){
+            return {
+                restrict: 'AE',
+                scope: {},
+                controller:  ['$scope', function ($scope){
+                    console.log($scope);
+                }
+                ],
+                link: function(scope, elem, attrs) {
+
+                    scope.$watch("noteText", function (value) {
+                        console.log(value)
+                    })
+
+                    scope.openEditor = function(index){
+                        console.log('openEditor');
+                        scope.editMode = true;
+                        if (index !== undefined) {
+                            scope.noteText = notesFactory.get(index).content;
+                            scope.index = index;
+                        } else
+                            scope.noteText = undefined;
+                    };
+                    scope.save = function() {
+                        console.log(scope)
+                         console.log(scope.noteText)
+                        if (scope.noteText !== "" && scope.noteText !== undefined) {
+                            var note = {};
+                            note.title = scope.noteText.length > 10 ? scope.noteText.substring(0, 10) + '. . .' : scope.noteText;
+                            note.content = scope.noteText;
+                            note.id = scope.index != -1 ? scope.index : localStorage.length;
+                            console.log('save noteText')
+                            scope.notes = notesFactory.put(note);
+                        }
+                        scope.restore();
+                    };
+
+
+                    scope.restore = function() {
+                        console.log('restore');
+                        scope.editMode = false;
+                        scope.index = -1;
+                        scope.noteText = "";
+                    };
+
+                    var editor = elem.find('#editor');
+
+                    scope.restore();
+
+                    scope.notes = notesFactory.getAll();
+
+                    editor.bind('keyup keydown', function() {
+                        scope.noteText = editor.text().trim();
+                    });
+
+                },
+                templateUrl: 'templateurl.html'
+            };
+        });
+
+    </script>
+
+    <style type="text/css">
+        @import url(http://fonts.googleapis.com/css?family=The+Girl+Next+Door);
+        * {
+            font-family: 'The Girl Next Door', cursive;
+        }
+        .title {
+            text-align: center;
+        }
+        notepad {
+            display: block;
+            width: 500px;
+            padding: 10px 10px;
+            margin: auto;
+        }
+        .note-area {
+            height: 450px;
+            background: url("http://extremecss.com/demos/paper.jpg") center center no-repeat;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+        body {
+            background: #f2f2f2;
+        }
+        #editor {
+            padding: 10px;
+            font-weight: bold;
+            padding-left: 40px;
+            font-size: 20px;
+        }
+        span a {
+            display: block;
+            margin-top: 10px;
+            border-top: 1px solid #96d1f8;
+            background: #65a9d7;
+            background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
+            background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+            background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+            background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+            background: -o-linear-gradient(top, #3e779d, #65a9d7);
+            padding: 10px 20px 5px 20px;
+            -webkit-border-radius: 11px;
+            -moz-border-radius: 11px;
+            border-radius: 11px;
+            -webkit-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+            -moz-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+            box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
+            text-shadow: rgba(0, 0, 0, .4) 0 1px 0;
+            color: white;
+            font-size: 17px;
+            text-decoration: none;
+            vertical-align: middle;
+            width: 90px;
+            text-align: center;
+        }
+        span a:hover {
+            border-top-color: #28597a;
+            background: #28597a;
+            color: #ccc;
+        }
+        span a:active {
+            border-top-color: #1b435e;
+            background: #1b435e;
+        }
+        ul li {
+            list-style-type: none;
+        }
+        ul li a {
+            display: block;
+            color: #222222;
+            font-weight: bold;
+            font-size: 22px;
+        }
+    </style>
+</head>
+<body>
+<h1 class="title">The Note Making App</h1>
+<notepad/>
+</body>
+</html>   

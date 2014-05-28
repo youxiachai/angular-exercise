@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html ng-app="testapp">
+<head>
+    <title></title>
+
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-route/angular-route.js"></script>
+    <script src="../bower_components/angular-resource/angular-resource.js"></script>
+
+
+    <script>
+
+        var app = angular.module('testapp', ['ngRoute', 'ngResource']);
+        
+        app.service('showLoadingService', function () {
+        
+            
+            this.showAlert = function () {
+                alert('showLoadingService');
+            }
+                
+        })
+        
+        app.factory('showLoadingFactory', function () {
+            var show = {}
+            
+            show.showAlert = function () {
+                alert('showLoadingFactory');
+            
+            }
+                
+            
+            return show
+        })
+        
+        app.controller('mycontroller', ['$scope', 'showLoadingService', 'showLoadingFactory', function ($scope, showLoadingService, showLoadingFactory) {
+            $scope.useService = function () {
+                console.log('useService')
+                showLoadingService.showAlert();
+            }
+            
+            $scope.useFacotry = function () {
+               console.log('useFacotry') 
+               showLoadingFactory.showAlert(); 
+            }
+        
+        }])
+
+
+
+    </script>
+
+</head>
+<body>
+    
+    <div ng-controller="mycontroller">
+        
+        enter number:
+        <input type="number" ng-model="number"/>
+        
+        <button ng-click="useService()" >userservice</button>
+        
+         <button ng-click="useFacotry()" >userfactory</button>
+        
+        
+        
+    </div>
+
+    
+</body>
+</html>

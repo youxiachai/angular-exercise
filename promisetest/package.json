@@ -1,0 +1,14 @@
+{
+  "name": "promisetest",
+  "version": "0.0.0",
+  "description": "",
+  "main": "testPromise.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "~1.2.4"
+  }
+}
